@@ -44,6 +44,25 @@ export class IfExpression implements Expression {
   ) {}
 }
 
+export class Environment {
+  constructor(
+    public bindings: Map<string, number>,
+    public next?: Environment
+  ) {}
+
+  public findBindings(name: string): Map<string, number> | null {
+    if (this.bindings.get(name) !== null) {
+      return this.bindings
+    }
+
+    if (this.next) {
+      return this.next.findBindings(name)
+    }
+
+    return null
+  }
+}
+
 /**
  * 数式の抽象構文木
  */
