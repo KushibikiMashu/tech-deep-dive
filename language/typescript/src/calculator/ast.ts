@@ -14,6 +14,17 @@ export class IntegerLiteral implements Expression {
   constructor(public value: number) {}
 }
 
+export class Assignment implements Expression {
+  constructor(
+    public name: string,
+    public expression: Expression
+  ) {}
+}
+
+export class Identifier implements Expression {
+  constructor(public name: string) {}
+}
+
 /**
  * 数式の抽象構文木
  */
@@ -36,5 +47,13 @@ export default class Ast {
 
   public static integer(value: number): IntegerLiteral {
     return new IntegerLiteral(value)
+  }
+
+  public static assignment(name: string, expression: Expression): Assignment {
+    return new Assignment(name, expression)
+  }
+
+  public static identifier(name: string): Identifier {
+    return new Identifier(name)
   }
 }
