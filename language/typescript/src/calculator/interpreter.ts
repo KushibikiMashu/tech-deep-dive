@@ -26,6 +26,18 @@ export default class Interpreter {
           }
 
           return lhs / rhs
+        case Operator.LESS_THAN:
+          return lhs < rhs ? 1 : 0
+        case Operator.LESS_OR_EQUAL:
+          return lhs <= rhs ? 1 : 0
+        case Operator.GREATER_THAN:
+          return lhs > rhs ? 1 : 0
+        case Operator.GREATER_OR_EQUAL:
+          return lhs >= rhs ? 1 : 0
+        case Operator.EQUAL_EQUAL:
+          return lhs === rhs ? 1 : 0
+        case Operator.NOT_EQUAL:
+          return lhs !== rhs ? 1 : 0
         default:
           throw new Error(`Unknown operator ${expression.operator}`)
       }
