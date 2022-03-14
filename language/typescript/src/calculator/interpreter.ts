@@ -1,4 +1,4 @@
-import {Assignment, BinaryExpression, Expression, Identifier, IntegerLiteral} from "./ast";
+import {Assignment, BinaryExpression, Expression, Identifier, IfExpression, IntegerLiteral} from "./ast";
 import {Operator} from "./operator";
 
 export default class Interpreter {
@@ -55,8 +55,23 @@ export default class Interpreter {
       const value = this.interpret(expression.expression)
       this.environment.set(expression.name, value)
       return value
-    }
-    else {
+    } else if (expression instanceof IfExpression) {
+      const condition = this.interpret(expression.condition)
+
+      if (condition === 1) {
+        // 条件が true の場合
+        return this.interpret(expression.thenClause)
+      } else {
+        // 条件が false の場合
+        const elseClause = expression.elseClause
+
+        if (!elseClause) {
+          return 1
+        }
+
+        return this.interpret(elseClause)
+      }
+    } else {
       throw new Error('not reach here')
     }
   }
