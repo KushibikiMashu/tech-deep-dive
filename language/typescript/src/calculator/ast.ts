@@ -1,16 +1,16 @@
 import {Operator, OperatorType} from "./operator";
 
-interface Expression {}
+export interface Expression {}
 
-class BinaryExpression implements Expression {
+export class BinaryExpression implements Expression {
   constructor(
     public operator: OperatorType,
     public lhs: Expression,
-    public rhs: Expression) {
-  }
+    public rhs: Expression
+  ) {}
 }
 
-class IntegerLiteral implements Expression {
+export class IntegerLiteral implements Expression {
   constructor(public value: number) {}
 }
 
