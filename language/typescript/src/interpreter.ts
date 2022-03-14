@@ -1,6 +1,6 @@
 import {
   Assignment,
-  BinaryExpression,
+  BinaryExpression, BlockExpression,
   Expression,
   Identifier,
   IfExpression,
@@ -89,6 +89,12 @@ export default class Interpreter {
         }
       }
       return 1
+    } else if (expression instanceof BlockExpression) {
+      let value = 0
+      for (const element of expression.elements) {
+        value = this.interpret(element)
+      }
+      return value
     } else {
       throw new Error('not reach here')
     }
