@@ -1,4 +1,12 @@
-import {Assignment, BinaryExpression, Expression, Identifier, IfExpression, IntegerLiteral} from "./ast";
+import {
+  Assignment,
+  BinaryExpression,
+  Expression,
+  Identifier,
+  IfExpression,
+  IntegerLiteral,
+  WhileExpression
+} from "./ast";
 import {Operator} from "./operator";
 
 export default class Interpreter {
@@ -71,6 +79,16 @@ export default class Interpreter {
 
         return this.interpret(elseClause)
       }
+    } else if (expression instanceof WhileExpression) {
+      while(true) {
+        const condition = this.interpret(expression.condition)
+        if (condition === 1) {
+          this.interpret(expression.body)
+        } else {
+          break
+        }
+      }
+      return 1
     } else {
       throw new Error('not reach here')
     }
