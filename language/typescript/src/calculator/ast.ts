@@ -10,6 +10,10 @@ class BinaryExpression implements Expression {
   }
 }
 
+class IntegerLiteral implements Expression {
+  constructor(public value: number) {}
+}
+
 /**
  * 数式の抽象構文木
  */
@@ -28,5 +32,9 @@ class Ast {
 
   public static divide(lhs: Expression, rhs: Expression): BinaryExpression {
     return new BinaryExpression(Operator.DIVIDE, lhs, rhs)
+  }
+
+  public static integer(value: number): IntegerLiteral {
+    return new IntegerLiteral(value)
   }
 }
