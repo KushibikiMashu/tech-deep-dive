@@ -25,6 +25,25 @@ export class Identifier implements Expression {
   constructor(public name: string) {}
 }
 
+export class BlockExpression implements Expression {
+  constructor(public elements: Expression[]) {}
+}
+
+export class WhileExpression implements Expression {
+  constructor(
+    public condition: Expression,
+    public body: Expression
+  ) {}
+}
+
+export class IfExpression implements Expression {
+  constructor(
+    public condition: Expression,
+    public thenClause: Expression,
+    public elseClause?: Expression
+  ) {}
+}
+
 /**
  * 数式の抽象構文木
  */
@@ -55,5 +74,17 @@ export default class Ast {
 
   public static identifier(name: string): Identifier {
     return new Identifier(name)
+  }
+
+  public static block(elements: Expression[]): BlockExpression {
+    return new BlockExpression(elements)
+  }
+
+  public static while(condition: Expression, body: Expression): WhileExpression {
+    return new WhileExpression(condition, body)
+  }
+
+  public static if(condition: Expression, thenClause: Expression, elseClause?: Expression): IfExpression {
+    return new IfExpression(condition, thenClause, elseClause)
   }
 }
