@@ -1,7 +1,13 @@
-import {BinaryExpression, Expression, IntegerLiteral} from "./ast";
+import {Assignment, BinaryExpression, Expression, Identifier, IntegerLiteral} from "./ast";
 import {Operator} from "./operator";
 
 export default class Interpreter {
+  environment: Map<string, number>
+
+  constructor() {
+    this.environment = new Map<string, number>();
+  }
+
   public interpret(expression: Expression): number {
     if (expression instanceof BinaryExpression) {
       const lhs = this.interpret(expression.lhs)
@@ -25,7 +31,20 @@ export default class Interpreter {
       }
     } else if (expression instanceof IntegerLiteral) {
       return expression.value
-    } else {
+    } else if (expression instanceof Identifier) {
+      const value = this.environment.get(expression.name)
+
+      if (!value) {
+        throw new Error(`Unknown identifier ${expression.name}`)
+      }
+
+      return value
+    } else if (expression instanceof Assignment) {
+      const value = this.interpret(expression.expression)
+      this.environment.set(expression.name, value)
+      return value
+    }
+    else {
       throw new Error('not reach here')
     }
   }
