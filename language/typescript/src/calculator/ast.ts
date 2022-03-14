@@ -17,7 +17,7 @@ class IntegerLiteral implements Expression {
 /**
  * 数式の抽象構文木
  */
-class Ast {
+export default class Ast {
   public static add(lhs: Expression, rhs: Expression): BinaryExpression {
     return new BinaryExpression(Operator.ADD, lhs, rhs)
   }
