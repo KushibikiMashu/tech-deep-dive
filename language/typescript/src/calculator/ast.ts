@@ -17,4 +17,16 @@ class Ast {
   public static add(lhs: Expression, rhs: Expression): BinaryExpression {
     return new BinaryExpression(Operator.ADD, lhs, rhs)
   }
+
+  public static subtract(lhs: Expression, rhs: Expression): BinaryExpression {
+    return new BinaryExpression(Operator.SUBTRACT, lhs, rhs)
+  }
+
+  public static multiply(lhs: Expression, rhs: Expression): BinaryExpression {
+    return new BinaryExpression(Operator.MULTIPLY, lhs, rhs)
+  }
+
+  public static divide(lhs: Expression, rhs: Expression): BinaryExpression {
+    return new BinaryExpression(Operator.DIVIDE, lhs, rhs)
+  }
 }
