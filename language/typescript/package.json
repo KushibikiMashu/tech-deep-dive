@@ -1,9 +1,10 @@
 {
   "name": "typescript",
-  "version": "1.0.0",
-  "main": "index.ts",
+  "version": "0.1.0",
+  "main": "src/index.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "jest"
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",
