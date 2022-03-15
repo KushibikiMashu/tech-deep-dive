@@ -101,11 +101,11 @@ describe('Interpreter', () => {
         //   println(i);
         //   i = i + 1;
         // }
-        const program: TopLevel = Ast.block(
+        const program: TopLevel = Ast.Block(
           Ast.assignment('i', Ast.integer(0)),
-          Ast.while(
+          Ast.While(
             Ast.lessThan(Ast.symbol('i'), Ast.integer(10)),
-            Ast.block(
+            Ast.Block(
               Ast.Println(Ast.symbol('i')),
               Ast.assignment("i", Ast.add(Ast.symbol('i'), Ast.integer(1)))
             )
@@ -123,7 +123,7 @@ describe('Interpreter', () => {
           // def main() {
           //   fact(5)
           // }
-          Ast.DefineFunction('main', [], Ast.block(
+          Ast.DefineFunction('main', [], Ast.Block(
             Ast.call('fact', Ast.integer(5)))
           ),
           // def factorial(n) {
@@ -133,8 +133,8 @@ describe('Interpreter', () => {
           //     n * fact(n - 1)
           //   }
           // }
-          Ast.DefineFunction('fact', ['n'], Ast.block(
-            Ast.if (
+          Ast.DefineFunction('fact', ['n'], Ast.Block(
+            Ast.If (
               Ast.lessThan(Ast.symbol('n'), Ast.integer(2)),
               Ast.integer(1),
               Ast.multiply(

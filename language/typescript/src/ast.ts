@@ -150,19 +150,19 @@ export default class Ast {
     return new Identifier(name)
   }
 
-  public static block(...elements: Expression[]): BlockExpression {
-    return new BlockExpression(elements)
-  }
-
   public static call(name: string, ...args: Expression[]): FunctionCall {
     return new FunctionCall(name, args)
   }
 
-  public static while(condition: Expression, body: Expression): WhileExpression {
+  public static Block(...elements: Expression[]): BlockExpression {
+    return new BlockExpression(elements)
+  }
+
+  public static While(condition: Expression, body: Expression): WhileExpression {
     return new WhileExpression(condition, body)
   }
 
-  public static if(condition: Expression, thenClause: Expression, elseClause?: Expression): IfExpression {
+  public static If(condition: Expression, thenClause: Expression, elseClause?: Expression): IfExpression {
     return new IfExpression(condition, thenClause, elseClause)
   }
 
