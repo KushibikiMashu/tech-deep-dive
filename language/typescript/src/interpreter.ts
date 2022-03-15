@@ -1,7 +1,7 @@
 import {
   Assignment,
   BinaryExpression, BlockExpression, Environment,
-  Expression, FunctionCall, FunctionDefinition,
+  Expression, FunctionCall, FunctionDefinition, GlobalVariableDefinition,
   Identifier,
   IfExpression,
   IntegerLiteral, Program,
@@ -129,8 +129,11 @@ export default class Interpreter {
     for (const definition of program.definitions) {
       if (definition instanceof FunctionDefinition) {
         this.functionEnvironment.set(definition.name, definition)
-      } else {
-        // グローバル変数の定義の処理
+      } else if (definition instanceof GlobalVariableDefinition) {
+        this.variableEnvironment.bindings.set(
+          definition.name,
+          this.interpret(definition.expression)
+        )
       }
 
       const mainFunction = this.functionEnvironment.get('main')

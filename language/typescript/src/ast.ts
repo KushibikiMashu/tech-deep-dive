@@ -44,6 +44,13 @@ export class IfExpression implements Expression {
   ) {}
 }
 
+export class FunctionCall implements Expression {
+  constructor(
+    public name: string,
+    public args: Expression[]
+  ) {}
+}
+
 export class Environment {
   constructor(
     public bindings: Map<string, number>,
@@ -79,10 +86,10 @@ export class FunctionDefinition implements TopLevel {
   ){}
 }
 
-export class FunctionCall implements Expression {
+export class GlobalVariableDefinition implements TopLevel {
   constructor(
     public name: string,
-    public args: Expression[]
+    public expression: Expression
   ) {}
 }
 
