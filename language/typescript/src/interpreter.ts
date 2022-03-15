@@ -123,7 +123,6 @@ export default class Interpreter {
     } else if (expression instanceof Println) {
       return this.interpret(expression.arg)
     } else {
-      console.log(expression);
       throw new Error('not reach here')
     }
   }
