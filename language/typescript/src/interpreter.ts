@@ -1,19 +1,25 @@
 import {
   Assignment,
-  BinaryExpression, BlockExpression,
-  Expression,
+  BinaryExpression, BlockExpression, Environment,
+  Expression, FunctionCall, FunctionDefinition,
   Identifier,
   IfExpression,
-  IntegerLiteral,
+  IntegerLiteral, Program,
   WhileExpression
 } from "./ast";
 import {Operator} from "./operator";
 
 export default class Interpreter {
-  environment: Map<string, number>
+  private variableEnvironment: Environment;
+  private functionEnvironment: Map<string, FunctionDefinition>
 
   constructor() {
-    this.environment = new Map<string, number>();
+    this.variableEnvironment = this.newEnvironment();
+    this.functionEnvironment = new Map<string, FunctionDefinition>();
+  }
+
+  newEnvironment(next?: Environment) {
+    return new Environment(new Map(), next)
   }
 
   public interpret(expression: Expression): number {
@@ -52,31 +58,31 @@ export default class Interpreter {
     } else if (expression instanceof IntegerLiteral) {
       return expression.value
     } else if (expression instanceof Identifier) {
-      const value = this.environment.get(expression.name)
-
-      if (!value) {
+      const bindings = this.variableEnvironment.findBindings(expression.name)
+      if (!bindings) {
         throw new Error(`Unknown identifier ${expression.name}`)
       }
-
-      return value
+      return bindings.get(expression.name) ?? 0
     } else if (expression instanceof Assignment) {
+      const bindings = this.variableEnvironment.findBindings(expression.name)
       const value = this.interpret(expression.expression)
-      this.environment.set(expression.name, value)
+      if (bindings) {
+        bindings.set(expression.name, value)
+      } else {
+        this.variableEnvironment.bindings.set(expression.name, value)
+      }
       return value
     } else if (expression instanceof IfExpression) {
       const condition = this.interpret(expression.condition)
-
       if (condition === 1) {
         // 条件が true の場合
         return this.interpret(expression.thenClause)
       } else {
         // 条件が false の場合
         const elseClause = expression.elseClause
-
         if (!elseClause) {
           return 1
         }
-
         return this.interpret(elseClause)
       }
     } else if (expression instanceof WhileExpression) {
@@ -95,8 +101,44 @@ export default class Interpreter {
         value = this.interpret(element)
       }
       return value
+    } else if (expression instanceof FunctionCall) {
+      const definition = this.functionEnvironment.get(expression.name)
+      if (!definition) {
+        throw new Error(`Unknown function ${expression.name}`)
+      }
+      // 実引数
+      const actualParams = expression.args
+      const values = actualParams.map(param => this.interpret(param))
+      const backup = this.variableEnvironment
+      this.variableEnvironment = this.newEnvironment(this.variableEnvironment)
+      // 仮引数
+      const formalParams = definition.args
+      for (let i = 0; i < formalParams.length; i++) {
+        const formalParamName = formalParams[i]
+        this.variableEnvironment.bindings.set(formalParamName, values[i])
+      }
+      const result = this.interpret(definition.body)
+      this.variableEnvironment = backup
+      return result
     } else {
       throw new Error('not reach here')
+    }
+  }
+
+  public callMain(program: Program) {
+    for (const definition of program.definitions) {
+      if (definition instanceof FunctionDefinition) {
+        this.functionEnvironment.set(definition.name, definition)
+      } else {
+        // グローバル変数の定義の処理
+      }
+
+      const mainFunction = this.functionEnvironment.get('main')
+      if (mainFunction) {
+        return this.interpret(mainFunction.body)
+      } else {
+        throw new Error('main function is not defined')
+      }
     }
   }
 }

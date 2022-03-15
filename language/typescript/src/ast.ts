@@ -63,6 +63,29 @@ export class Environment {
   }
 }
 
+export interface TopLevel {}
+
+export class Program {
+  constructor(
+    public definitions: TopLevel[]
+  ) {}
+}
+
+export class FunctionDefinition implements TopLevel {
+  constructor(
+    public name: string,
+    public args: string[],
+    public body: Expression
+  ){}
+}
+
+export class FunctionCall implements Expression {
+  constructor(
+    public name: string,
+    public args: Expression[]
+  ) {}
+}
+
 /**
  * 数式の抽象構文木
  */
