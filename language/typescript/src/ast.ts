@@ -51,6 +51,10 @@ export class FunctionCall implements Expression {
   ) {}
 }
 
+export class Println implements Expression {
+  constructor(public arg: Expression) {}
+}
+
 export interface TopLevel {}
 
 export class Program {
@@ -162,8 +166,8 @@ export default class Ast {
     return new IfExpression(condition, thenClause, elseClause)
   }
 
-  public static Println(arg: Expression) {
-    console.log(arg)
+  public static Println(arg: Expression): Println {
+    return new Println(arg)
   }
 
   public static DefineFunction(name: string, args: string[], body: Expression):FunctionDefinition {

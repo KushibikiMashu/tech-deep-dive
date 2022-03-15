@@ -4,7 +4,7 @@ import {
   Expression, FunctionCall, FunctionDefinition, GlobalVariableDefinition,
   Identifier,
   IfExpression,
-  IntegerLiteral, Program,
+  IntegerLiteral, Println, Program,
   WhileExpression
 } from "./ast";
 import {Operator} from "./operator";
@@ -120,7 +120,10 @@ export default class Interpreter {
       const result = this.interpret(definition.body)
       this.variableEnvironment = backup
       return result
+    } else if (expression instanceof Println) {
+      return this.interpret(expression.arg)
     } else {
+      console.log(expression);
       throw new Error('not reach here')
     }
   }

@@ -91,22 +91,45 @@ describe('Interpreter', () => {
     })
   })
 
+  describe('while', () => {
+    test('1から9まで足すと、55を返す', () => {
+      // i = 0;
+      // while(i < 10) {
+      //   println(i);
+      //   i = i + 1;
+      // }
+      const program: TopLevel = Ast.block(
+          Ast.assignment('i', Ast.integer(0)),
+          Ast.while(
+            Ast.lessThan(Ast.symbol('i'), Ast.integer(10)),
+            Ast.block(
+              Ast.Println(Ast.symbol('i')),
+              Ast.assignment("i", Ast.add(Ast.symbol('i'), Ast.integer(1)))
+            )
+          )
+        )
+
+      interpreter.interpret(program)
+      expect(true).toBeTruthy()
+    })
+  })
+
   describe('factorial', () => {
     test('1から5までフィボナッチ数列を計算すると、120を返す', () => {
       const topLevels: TopLevel[] = [
-        //  def main() {
-        //    fact(5)
-        //  }
+        // def main() {
+        //   fact(5)
+        // }
         Ast.DefineFunction('main', [], Ast.block(
           Ast.call('fact', Ast.integer(5)))
         ),
         // def factorial(n) {
-        //    if (n < 2) {
-        //      1
-        //    } else {
-        //      n * fact(n - 1)
-        //    }
-        //  }
+        //   if (n < 2) {
+        //     1
+        //   } else {
+        //     n * fact(n - 1)
+        //   }
+        // }
         Ast.DefineFunction('fact', ['n'], Ast.block(
           Ast.if (
             Ast.lessThan(Ast.symbol('n'), Ast.integer(2)),
