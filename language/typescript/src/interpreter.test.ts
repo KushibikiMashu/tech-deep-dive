@@ -1,5 +1,5 @@
 import Interpreter from "./interpreter";
-import Ast from "./ast";
+import Ast, {Program, TopLevel} from "./ast";
 
 const interpreter = new Interpreter()
 
@@ -89,5 +89,39 @@ describe('Interpreter', () => {
       const expression = Ast.divide(Ast.integer(10), Ast.integer(0))
       expect(() => interpreter.interpret(expression)).toThrow()
     })
+  })
+
+  describe('factorial', () => {
+    test('1から5までフィボナッチ数列を計算すると、120を返す', () => {
+      const topLevels: TopLevel[] = [
+        //  def main() {
+        //    fact(5)
+        //  }
+        Ast.DefineFunction('main', [], Ast.block(
+          Ast.call('fact', Ast.integer(5)))
+        ),
+        // def factorial(n) {
+        //    if (n < 2) {
+        //      1
+        //    } else {
+        //      n * fact(n - 1)
+        //    }
+        //  }
+        Ast.DefineFunction('fact', ['n'], Ast.block(
+          Ast.if (
+            Ast.lessThan(Ast.symbol('n'), Ast.integer(2)),
+            Ast.integer(1),
+            Ast.multiply(
+              Ast.symbol('n'),
+              Ast.call('fact', Ast.subtract(Ast.symbol('n'), Ast.integer(1)))
+            )
+          )
+        ))
+      ]
+
+      const actual = interpreter.callMain(new Program(topLevels))
+      expect(actual).toBe(120)
+    })
+
   })
 })

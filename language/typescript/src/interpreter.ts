@@ -125,7 +125,7 @@ export default class Interpreter {
     }
   }
 
-  public callMain(program: Program) {
+  public callMain(program: Program): number {
     for (const definition of program.definitions) {
       if (definition instanceof FunctionDefinition) {
         this.functionEnvironment.set(definition.name, definition)
@@ -135,13 +135,13 @@ export default class Interpreter {
           this.interpret(definition.expression)
         )
       }
+    }
 
-      const mainFunction = this.functionEnvironment.get('main')
-      if (mainFunction) {
-        return this.interpret(mainFunction.body)
-      } else {
-        throw new Error('main function is not defined')
-      }
+    const mainFunction = this.functionEnvironment.get('main')
+    if (mainFunction) {
+      return this.interpret(mainFunction.body)
+    } else {
+      throw new Error('main function is not defined')
     }
   }
 }

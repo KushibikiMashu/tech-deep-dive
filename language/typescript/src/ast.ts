@@ -51,25 +51,6 @@ export class FunctionCall implements Expression {
   ) {}
 }
 
-export class Environment {
-  constructor(
-    public bindings: Map<string, number>,
-    public next?: Environment
-  ) {}
-
-  public findBindings(name: string): Map<string, number> | null {
-    if (this.bindings.get(name) !== null) {
-      return this.bindings
-    }
-
-    if (this.next) {
-      return this.next.findBindings(name)
-    }
-
-    return null
-  }
-}
-
 export interface TopLevel {}
 
 export class Program {
@@ -91,6 +72,25 @@ export class GlobalVariableDefinition implements TopLevel {
     public name: string,
     public expression: Expression
   ) {}
+}
+
+export class Environment {
+  constructor(
+    public bindings: Map<string, number>,
+    public next?: Environment
+  ) {}
+
+  public findBindings(name: string): Map<string, number> | null {
+    if (this.bindings.get(name) !== null) {
+      return this.bindings
+    }
+
+    if (this.next) {
+      return this.next.findBindings(name)
+    }
+
+    return null
+  }
 }
 
 /**
@@ -117,16 +117,41 @@ export default class Ast {
     return new IntegerLiteral(value)
   }
 
+  public static lessThan(lhs: Expression, rhs: Expression): BinaryExpression {
+    return new BinaryExpression(Operator.LESS_THAN, lhs, rhs)
+  }
+
+  public static lessOrEqual(lhs: Expression, rhs: Expression): BinaryExpression {
+    return new BinaryExpression(Operator.LESS_OR_EQUAL, lhs, rhs)
+  }
+
+  public static greaterThan(lhs: Expression, rhs: Expression): BinaryExpression {
+    return new BinaryExpression(Operator.GREATER_THAN, lhs, rhs)
+  }
+
+  public static greaterOrEqual(lhs: Expression, rhs: Expression): BinaryExpression {
+    return new BinaryExpression(Operator.GREATER_OR_EQUAL, lhs, rhs)
+  }
+
+  public static equalEqual(lhs: Expression, rhs: Expression): BinaryExpression {
+    return new BinaryExpression(Operator.EQUAL_EQUAL, lhs, rhs)
+  }
+
+
   public static assignment(name: string, expression: Expression): Assignment {
     return new Assignment(name, expression)
   }
 
-  public static identifier(name: string): Identifier {
+  public static symbol(name: string): Identifier {
     return new Identifier(name)
   }
 
-  public static block(elements: Expression[]): BlockExpression {
+  public static block(...elements: Expression[]): BlockExpression {
     return new BlockExpression(elements)
+  }
+
+  public static call(name: string, ...args: Expression[]): FunctionCall {
+    return new FunctionCall(name, args)
   }
 
   public static while(condition: Expression, body: Expression): WhileExpression {
@@ -135,5 +160,13 @@ export default class Ast {
 
   public static if(condition: Expression, thenClause: Expression, elseClause?: Expression): IfExpression {
     return new IfExpression(condition, thenClause, elseClause)
+  }
+
+  public static Println(arg: Expression) {
+    console.log(arg)
+  }
+
+  public static DefineFunction(name: string, args: string[], body: Expression):FunctionDefinition {
+    return new FunctionDefinition(name, args, body)
   }
 }
